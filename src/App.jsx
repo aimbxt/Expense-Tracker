@@ -5,14 +5,14 @@ import DashBoard from './DashBoard'
 import ExpenseList from './ExpenseList'
 
 function App() {
-  const [expenses, setExpenses] = useState([{Name: "", Amount: ""}])
+  const [expenses, setExpenses] = useState([{name: "Placeholder", amount: "$100"}])
   
   return (
     <>
       <div className="body">
         <SideBar />
         <DashBoard />
-        <ExpenseList />
+        <ExpenseList expenses={expenses}/>
       </div>
     </>
   )

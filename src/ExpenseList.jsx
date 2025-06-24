@@ -2,20 +2,16 @@ import { useState } from 'react'
 import './ExpenseList.css'
 
 export default function ExpenseList( { expenses }) {
-    const list = (expenses) => {
-        return (
-            <ul>
-                {expenses.map((currentExpense, index) => (
-                    <ExpenseItem expense={currentExpense} key={index}/>
-                ))}
-            </ul>
-        )
-    }
-
+    
     return (
         <>
             <div className="expenselist-main">
                 <h1>Expenses:</h1>
+                <ul>
+                    {expenses.map((currentExpense, index) => (
+                        <ExpenseItem expense={currentExpense} key={index}/>
+                    ))}
+                </ul>
             </div>
         </>
     )
@@ -23,8 +19,8 @@ export default function ExpenseList( { expenses }) {
 
 function ExpenseItem( { expense }) {
     return (
-        <li>
-            {expense.name}
+        <li className="expenselist-item">
+            {expense.name + ": " + expense.amount } 
         </li>
     )
 }
