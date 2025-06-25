@@ -17,7 +17,7 @@ export default function ExpenseList( { expenses }) {
     )
 }
 
-function ExpenseItem( { expense }) {
+function ExpenseItem({ expense }) {
     return (
         <li className="expenselist-item">
             {expense.name + ": " + expense.amount } 

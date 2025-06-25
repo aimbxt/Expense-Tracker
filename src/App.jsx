@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import './App.css'
-import SideBar from './SideBar'
-import DashBoard from './DashBoard'
-import ExpenseList from './ExpenseList'
+import SideBar from './SideBar/SideBar.jsx'
+import DashBoard from './DashBoard/DashBoard.jsx'
+import ExpenseList from './ExpenseList/ExpenseList.jsx'
 
 function App() {
-  const [expenses, setExpenses] = useState([{name: "Placeholder", amount: "$100"}])
+  const [expenses, setExpenses] = useState([{name: "Placeholder", amount: "$100", category: "Food", date: "1-1-26"}])
   
   return (
     <>
       <div className="body">
         <SideBar />
-        <DashBoard />
+        <DashBoard expenses={expenses}/>
         <ExpenseList expenses={expenses}/>
       </div>
     </>
