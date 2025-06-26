@@ -55,5 +55,8 @@
 .desc-cat {
     display: flex;
     flex-direction: row;
-    
+}
+
+.invalid {
+    border-color: red
 }

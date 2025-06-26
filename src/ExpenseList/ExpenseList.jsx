@@ -20,7 +20,7 @@ export default function ExpenseList( { expenses }) {
 function ExpenseItem({ expense }) {
     return (
         <li className="expenselist-item">
-            {expense.name + ": " + expense.amount } 
+            {expense.date + " -" + expense.name + ": $" + expense.amount.replace(/\D/g, '') } 
         </li>
     )
 }
