@@ -1,0 +1,13 @@
+TODO:
+-use orElseThrow() to handle errors / check if user already exists 
+-> check if user already exists in PUT mapping
+
+-STORE USER'S BALANCE IN User.java
+
+-change error handling to ResponseStatusException (httpstatus. etc)
+
+-@ControllerAdvice spring annotation - error handling
+
+-implement DTOs 
+
+-fix unecessarily long http headers 
