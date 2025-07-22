@@ -24,22 +24,27 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private Double balance;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Expense> expenses;
 
-    public User() {}
+    public User() {
+        balance = 0.0;
+    }
 
     public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
+        balance = 0.0;
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        balance = 0.0;
     }
 
     public Long getId() {
@@ -64,6 +69,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public List<Expense> getExpenses() {

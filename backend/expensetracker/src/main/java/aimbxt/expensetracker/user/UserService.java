@@ -24,42 +24,29 @@ public class UserService {
         }
         userRepository.save(user);
     }
-
+ 
     public void deleteUser(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new IllegalStateException("User does not exist");
+        if (!userRepository.existsById(id)) {
+            throw new IllegalStateException("User not found");
         }
         userRepository.deleteById(id);
     }
 
     public void updateUser(Long id, User user) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new IllegalStateException("User does not exist");
-        }
-        User existingUser = userOptional.get();
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("User not found"));
         existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
         userRepository.save(existingUser);
-    }
+    }   
 
     public void updateUsername(Long id, String username) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new IllegalStateException("User does not exist");
-        }
-        User existingUser = userOptional.get();
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("User not found"));
         existingUser.setUsername(username);
         userRepository.save(existingUser);
     }
 
     public void updatePassword(Long id, String password) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new IllegalStateException("User does not exist");
-        }
-        User existingUser = userOptional.get();
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("User not found"));
         existingUser.setPassword(password);
         userRepository.save(existingUser);
     }

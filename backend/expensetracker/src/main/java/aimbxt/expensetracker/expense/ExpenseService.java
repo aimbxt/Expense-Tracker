@@ -7,16 +7,19 @@ import org.springframework.stereotype.Service;
 
 import aimbxt.expensetracker.user.User;
 import aimbxt.expensetracker.user.UserRepository;
+import aimbxt.expensetracker.user.BalanceService;
 
 @Service
 public class ExpenseService {
     
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
+    private final BalanceService balanceService;
 
-    public ExpenseService(ExpenseRepository expenseRepository, UserRepository userRepository) {
+    public ExpenseService(ExpenseRepository expenseRepository, UserRepository userRepository, BalanceService balanceService) {
         this.expenseRepository = expenseRepository;
         this.userRepository = userRepository;
+        this.balanceService = balanceService;
     }
 
     public List<Expense> getExpenses() {
@@ -24,14 +27,14 @@ public class ExpenseService {
     }
 
     public void addExpense(Long userId, Expense expense) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new IllegalStateException("User not found");
-        }
-        User user = userOptional.get();
+        User user = userRepository.findById(userId).orElseThrow(() -> 
+            new IllegalStateException("User not found"));
         user.getExpenses().add(expense);
         expense.setUser(user);
         expenseRepository.save(expense);
+
+        balanceService.changeBalance(userId, expense.getAmount());
+        userRepository.save(user);
     }
 
     public void deleteExpense(Long userId, Long expenseId) {
@@ -40,7 +43,9 @@ public class ExpenseService {
         if (!expense.getUser().getId().equals(userId)) {
             throw new IllegalStateException("Expense does not belong to this user");
         }
+        balanceService.changeBalance(userId, -expense.getAmount());
         expenseRepository.deleteById(expenseId);
+        
     }
 
     public void updateExpense(Long userId, Long expenseId, Expense newExpense) {
