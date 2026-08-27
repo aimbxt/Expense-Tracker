@@ -1,22 +1,2 @@
-.expenselist-main {
-    border : 1px solid #000000;
-    border-width: 2px;
-    border-radius: 8px;
-    padding: 2em;
-    max-height: 100%;
-    width: 320px;
-    max-width: 320px;
-    overflow: none;
-    display: flex;
-    flex-direction: column;
-}
-
-.button {
-    margin-bottom: 1em;
-}
-
-.expenselist-item {
-    border : 0.5px solid #000000;
-    border-radius: 8px;
-    
-}
+.expenselist-main { margin-top: 28px; background: white; border: 1px solid #ededf5; border-radius: 16px; padding: 24px; box-shadow: 0 8px 24px rgba(38, 36, 83, .04); }.list-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }.list-heading h2 { font-size: 18px; color: #292b4d; }.transaction-count { color: #9295ac; font-size: 12px; }.expense-table { display: grid; }.expenselist-item { display: grid; grid-template-columns: 38px 1fr auto auto; gap: 13px; align-items: center; padding: 13px 0; border-top: 1px solid #f0f0f5; }.expense-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; color: #7365dc; background: #f0eeff; font-weight: 800; font-size: 12px; }.expense-icon.transport { color: #c36e27; background: #fff0df; }.expense-icon.utilities { color: #248a5d; background: #e7f8ee; }.expense-icon.other { color: #66718d; background: #edf0f7; }.expense-details { display: grid; gap: 4px; }.expense-details strong { color: #363851; font-size: 13px; }.expense-details span { color: #999caf; font-size: 11px; }.expense-amount { color: #383b58; font-size: 13px; }.expense-actions { display: flex; gap: 4px; opacity: 0; transition: opacity .2s; }.expenselist-item:hover .expense-actions { opacity: 1; }.expense-actions button { border: 0; background: transparent; color: #8075dc; font-size: 11px; padding: 5px; }.expense-actions button:last-child { color: #c16d78; }.empty-state { text-align: center; padding: 28px 10px 16px; color: #a0a2b5; }.empty-state span { color: #8b7cf6; font-size: 24px; }.empty-state h3 { color: #555873; font-size: 14px; margin: 8px 0 5px; }.empty-state p { font-size: 12px; }.editing { grid-template-columns: 1.5fr .8fr .9fr 1fr auto; }.editing input, .editing select { min-width: 0; border: 1px solid #e2e2ed; border-radius: 7px; padding: 8px; color: #343651; font-size: 12px; }.editing .expense-actions { opacity: 1; }
+@media (max-width: 720px) { .expenselist-main { padding: 18px; }.expense-actions { opacity: 1; }.expenselist-item { grid-template-columns: 36px 1fr auto; }.expense-actions { grid-column: 2 / -1; }.editing { grid-template-columns: 1fr 1fr; }.editing .expense-actions { grid-column: auto; } }

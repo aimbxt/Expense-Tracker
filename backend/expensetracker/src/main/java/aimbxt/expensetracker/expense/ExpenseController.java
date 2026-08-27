@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/expense")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ExpenseController {
     
     private final ExpenseService expenseService;
@@ -19,6 +20,11 @@ public class ExpenseController {
     @GetMapping
     public List<Expense> getExpenses() {
         return expenseService.getExpenses();
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<Expense> getUserExpenses(@PathVariable Long userId) {
+        return expenseService.getUserExpenses(userId);
     }
 
     @PostMapping("/user/{userId}")

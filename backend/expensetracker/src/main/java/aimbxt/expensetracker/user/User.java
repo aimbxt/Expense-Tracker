@@ -1,6 +1,7 @@
 package aimbxt.expensetracker.user;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -28,7 +29,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Expense> expenses;
+    private List<Expense> expenses = new ArrayList<>();
 
     public User() {
         balance = 0.0;

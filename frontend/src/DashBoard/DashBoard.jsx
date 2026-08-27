@@ -1,63 +1,61 @@
 import { useState } from 'react';
 import './DashBoard.css';
 
-export default function DashBoard({addExpenseFn}) {
+export default function DashBoard({ user, expenses, totalSpent, balance, loading, saving, addExpenseFn }) {
     const [descText, setDescText] = useState("");
     const [amountText, setAmountText] = useState("");
     const [categoryText, setCategoryText] = useState("");
     const [dateText, setDateText] = useState("");
     const [invalidFields, setInvalidFields] = useState([]);
 
-    const handleAddExpense = () => {
+    const handleAddExpense = async (event) => {
+        event.preventDefault();
         const missing = [];
         if (!descText) {missing.push("desc");}
-        if (!amountText || isNaN(amountText)) {missing.push("amount");}
+        if (!amountText || Number.isNaN(Number(amountText)) || Number(amountText) <= 0) {missing.push("amount");}
         if (!categoryText) {missing.push("category");}
         if (!dateText) {missing.push("date");}
 
         setInvalidFields(missing);
 
         if (missing.length === 0) {
-            addExpenseFn(descText, amountText, categoryText, dateText);
+            await addExpenseFn({ name: descText.trim(), amount: Number(amountText), category: categoryText, date: dateText });
             setDescText("");
             setAmountText("");
             setCategoryText("");
             setDateText("");
-        }
-        else {
-            alert("Fill in all fields!");
         }
     }
 
     return (
         <>
         <div className="dashboard-main">
-            <h1>Dashboard</h1>
+            <div className="page-heading"><div><p className="eyebrow">{user ? `Good morning, ${user.username}` : 'Get started'}</p><h1>Overview</h1></div><span className="date-pill">{new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
             <div className="summarySection">
-                <SummaryComponent name={"Balance: $10,950"} />
-                <SummaryComponent name={"Budget: $20,000"} />
-                <SummaryComponent name={"Income: $560"} />
+                <SummaryComponent label="Total spent" value={totalSpent} detail={`${expenses.length} transactions`} accent="purple" />
+                <SummaryComponent label="Account balance" value={balance} detail="Tracked balance" accent="green" />
+                <SummaryComponent label="Average expense" value={expenses.length ? totalSpent / expenses.length : 0} detail="Per transaction" accent="orange" />
             </div>
             <div className="addExpenseSection">
-                <AddExpenseBox descText={descText} setDescText={setDescText} amountText={amountText} setAmountText={setAmountText}
+                <AddExpenseBox disabled={!user || saving} saving={saving} descText={descText} setDescText={setDescText} amountText={amountText} setAmountText={setAmountText}
                 categoryText={categoryText} setCategoryText={setCategoryText} dateText={dateText} setDateText={setDateText} 
                 onAddExpense={handleAddExpense} invalidFields={invalidFields} setInvalidFields={setInvalidFields}/>
-                <ExpenseChart />
+                <ExpenseChart expenses={expenses} loading={loading} />
             </div>
         </div>
         </>
     )
 }
 
-function SummaryComponent({name}) {
+function SummaryComponent({ label, value, detail, accent }) {
     return (
-        <div className="summaryComponent">
-            <h2>{name}</h2>
+        <div className={`summaryComponent ${accent}`}>
+            <p>{label}</p><h2>${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2><span>{detail}</span>
         </div>
     )
 }
 
-function AddExpenseBox({descText, setDescText, amountText, setAmountText, 
+function AddExpenseBox({ disabled, saving, descText, setDescText, amountText, setAmountText, 
     categoryText, setCategoryText, dateText, setDateText, onAddExpense, invalidFields, setInvalidFields}) {
     const handleDescChange = (e) => {
         setDescText(e.target.value);
@@ -77,36 +75,32 @@ function AddExpenseBox({descText, setDescText, amountText, setAmountText,
     };
 
     return (
-        <div className="addExpenseBox">
-            <h4>Description:</h4>
-            <input type="text" value={descText} onChange={handleDescChange} className={invalidFields.includes("desc") ? "invalid" : ""}/>
-            <div className="desc-cat">
-                <h4>Amount:</h4>
-                <input type="text" value={amountText} onChange={handleAmountChange} 
+        <form className="addExpenseBox" onSubmit={onAddExpense}>
+            <div className="section-title"><div><p className="eyebrow">Quick entry</p><h3>Add an expense</h3></div><span className="plus-icon">+</span></div>
+            <label>Description<input type="text" value={descText} onChange={handleDescChange} placeholder="e.g. Coffee with friends" className={invalidFields.includes("desc") ? "invalid" : ""} disabled={disabled}/></label>
+            <div className="form-row"><label>Amount<input type="number" min="0.01" step="0.01" value={amountText} onChange={handleAmountChange} placeholder="0.00"
                 className={invalidFields.includes("amount") ? "invalid" : ""}/>
-                <h4>Category:</h4>
-                <label htmlFor="category">Choose a category:</label>
-                <select id="category" value={categoryText} onChange={handleCategoryChange}
+                </label><label>Category<select id="category" value={categoryText} onChange={handleCategoryChange}
                 className={invalidFields.includes("category") ? "invalid" : ""}>
                     <option value="">Select...</option>
                     <option value="Food">Food</option>
                     <option value="Transport">Transport</option>
                     <option value="Utilities">Utilities</option>
                     <option value="Other">Other</option>
-                </select>
-            </div>
-            <h4>Date:</h4>
-            <input type="date" value={dateText} onChange={handleDateChange} 
-            className={invalidFields.includes("date") ? "invalid" : ""}/>
-            <button onClick={onAddExpense}>Add Expense</button>
-        </div>
+                </select></label></div>
+            <label>Date<input type="date" value={dateText} onChange={handleDateChange} className={invalidFields.includes("date") ? "invalid" : ""} disabled={disabled}/></label>
+            <button className="primary-button" type="submit" disabled={disabled}>{saving ? 'Saving…' : disabled ? 'Create an account first' : 'Add expense'} <span>→</span></button>
+        </form>
     )
 }
 
-function ExpenseChart() {
+function ExpenseChart({ expenses, loading }) {
+    const categories = expenses.reduce((totals, expense) => ({ ...totals, [expense.category]: (totals[expense.category] || 0) + Number(expense.amount) }), {})
+    const largest = Math.max(...Object.values(categories), 1)
     return (
         <div className="expenseChart">
-            Chart
+            <div className="section-title"><div><p className="eyebrow">Spending habits</p><h3>By category</h3></div><span className="chart-symbol">◒</span></div>
+            {loading ? <p className="muted">Loading your spending…</p> : Object.keys(categories).length ? Object.entries(categories).map(([category, amount]) => <div className="category-row" key={category}><div><span className={`category-dot ${category.toLowerCase()}`} />{category}<strong>${amount.toFixed(2)}</strong></div><div className="bar"><i style={{ width: `${(amount / largest) * 100}%` }} /></div></div>) : <p className="muted">Your category breakdown will appear here.</p>}
         </div>
     )
 }

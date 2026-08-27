@@ -13,6 +13,8 @@ public class BalanceService {
 
     public void changeBalance(Long userId, Double balance) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
-        user.setBalance(user.getBalance() + balance);
+        double currentBalance = user.getBalance() == null ? 0.0 : user.getBalance();
+        user.setBalance(currentBalance + balance);
+        userRepository.save(user);
     }
 }
